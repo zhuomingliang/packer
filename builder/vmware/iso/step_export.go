@@ -3,14 +3,15 @@ package iso
 import (
 	"bytes"
 	"fmt"
-	"github.com/mitchellh/multistep"
-	"github.com/mitchellh/packer/packer"
 	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"github.com/mitchellh/multistep"
+	"github.com/mitchellh/packer/packer"
 )
 
 type StepExport struct {
@@ -42,7 +43,7 @@ func (s *StepExport) Run(state multistep.StateBag) multistep.StepAction {
 		return multistep.ActionContinue
 	}
 
-	if c.RemoteType != "esx5" || s.Format == "" {
+	if c.RemoteType != "esx5" {
 		return multistep.ActionContinue
 	}
 
