@@ -80,6 +80,8 @@ func (c *comm) Start(cmd *packer.RemoteCmd) (err error) {
 		return
 	}
 
+	c.conn.SetDeadline(time.Now().Add(time.Minute))
+
 	// Setup our session
 	session.Stdin = cmd.Stdin
 	session.Stdout = cmd.Stdout
@@ -271,6 +273,8 @@ func (c *comm) reconnect() (err error) {
 		log.Printf("reconnection error: %s", err)
 		return
 	}
+
+	c.conn.SetDeadline(time.Now().Add(1 * time.Minute))
 
 	log.Printf("handshaking with SSH")
 
