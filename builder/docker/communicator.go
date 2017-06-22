@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"syscall"
@@ -75,7 +76,9 @@ func (c *Communicator) Upload(dst string, src io.Reader, fi *os.FileInfo) error 
 	}
 
 	if fi != nil {
-		tempfile.Chmod((*fi).Mode())
+		if runtime.GOOS != "windows" {
+			tempfile.Chmod((*fi).Mode())
+		}
 	}
 	tempfile.Close()
 
@@ -156,7 +159,11 @@ func (c *Communicator) UploadDir(dst string, src string, exclude []string) error
 			return err
 		}
 
-		return dst.Chmod(si.Mode())
+		if runtime.GOOS != "windows" {
+			return dst.Chmod(si.Mode())
+		} else {
+			return nil
+		}
 	}
 
 	// Copy the entire directory tree to the temporary directory
