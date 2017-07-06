@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"runtime"
 	"sort"
 	"strings"
 
@@ -68,7 +69,12 @@ func (p *PostProcessor) Configure(raws ...interface{}) error {
 	}
 
 	if p.config.ExecuteCommand == "" {
-		p.config.ExecuteCommand = `chmod +x "{{.Script}}"; {{.Vars}} "{{.Script}}"`
+		if runtime.GOOS == "windows" {
+			// chmod doesn't exist on windows!
+			p.config.ExecuteCommand = `{{.Vars}} {{.Script}}`
+		} else {
+			p.config.ExecuteCommand = `chmod +x "{{.Script}}"; {{.Vars}} "{{.Script}}"`
+		}
 	}
 
 	if p.config.Inline != nil && len(p.config.Inline) == 0 {
